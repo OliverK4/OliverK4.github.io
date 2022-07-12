@@ -1,0 +1,125 @@
+#titulo{
+font-size: 2.8rem;
+color: rgb(255, 255, 255);
+font-family: 'Open Sans';
+font-weight: bold;
+
+position:absolute;
+}
+
+#subtit{
+font-size: 1.7rem;
+color: rgb(255, 255, 255);
+font-family: 'Open Sans';
+font-weight: bold;
+text-decoration: underline;
+position:absolute;
+}
+
+#texto{
+font-size: 1.1rem;
+color: rgb(255, 255, 255);
+font-family: 'Open Sans';
+position: absolute;
+}
+
+
+#pdb{
+width: 150;
+height: 150;
+left: 87%;
+position: absolute;
+}
+
+#esp32{
+width: 300;
+height: 200;
+top: 22rem;
+left: 2rem;
+position: absolute;
+}
+
+#bread{
+width: 300;
+height: 200;
+top: 22rem;
+left: 22rem;
+position: absolute;
+}
+
+#led{
+width: 300;
+height: 200;
+top: 22rem;
+left: 42rem;
+position: absolute;
+}
+
+#max{
+width: 300;
+height: 200;
+top: 22rem;
+left: 62rem;
+position: absolute;
+}
+
+#arreglo{
+width: 300;
+height: 200;
+top: 48rem;
+left: 2rem;
+position: absolute;
+}
+
+#esquema{
+width: 350;
+height: 250;
+top: 72rem;
+left: 2rem;
+position: absolute;
+}
+
+#proto{
+width: 350;
+height: 250;
+top: 72rem;
+left: 25rem;
+position: absolute;
+}
+
+#codigo{
+left: 4rem;
+top: 101rem;
+color: rgb(255, 255, 255);
+position: absolute;
+z-index: 100%;
+}
+
+#cuadrado{
+width: 43rem; 
+height: 62rem; 
+top: 101rem;
+left: 2rem;
+background: #3d4042;
+position: absolute;
+border-radius: 0.40rem;
+border-color: rgb(255, 255, 255);
+border-width: 2px;
+border-style: solid;
+}
+
+#oximetro{
+width: 650;
+height: 450;
+top: 176rem;
+left: 2rem;
+position: absolute;
+}
+
+#video{
+width: 700;
+height: 500;
+top: 173rem;
+left: 50rem;
+position: absolute;
+}

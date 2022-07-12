@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>Oxímetro</title>
+<link rel="stylesheet" href="int_tecno.css">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css">
+</head>
+<body>
+<style>
+    body {
+    background-image: url('circuits.jpg');
+    }
+</style>
+<img id="pdb" src="pdb.png">
+<h1 id="titulo" style="left:2rem;">Informe de proyecto final: Oximetro en esp32</h1>
+
+<h2 id="subtit" style="left:2rem; top:6rem">Introducción:</h2>
+
+<p id="texto" style="top:9rem; left:2rem"> En este trabajo se buscó aplicar los conocimientos de la materia para desarrollar un proyecto personal libre, lo que en este caso fué un oxímetro, un medidor de saturación de oxígeno en sangre y frecuencia cardíaca.
+<br>Para realizar este proyecto se llevaron a cabo varios pasos.
+</p>
+
+<h2 id="subtit" style="left:2rem; top:15rem;">1)Comprar elementos:</h2>
+<p id="texto"> </p>
+
+<p id="texto" style="top:18rem; left:2rem">Se ha tenido que invertir dinero al proyecto (por desgracia). Los elementos necesarios fueron: Esp32, breadboard, cables, Max30100(sensor de pulso cardíaco), y una pantalla OLED SSD1306.</p>
+
+<img id="esp32" src="esp32.jpg">
+<img id="bread" src="breadboard.jpg">
+<img id="led" src="led.jpg">
+<img id="max" src="max30100.webp">
+
+<h2 id="subtit" style="top: 35rem;left: 2rem;">2)Preparar el sensor</h2>
+
+<p id="texto" style="left:2rem;top: 38rem;">Momento de preparar el sensor MAX30100. Hay que soldarle los pines que vienen con el mismo.<br>
+Otra cosa que queda e importante, es hacer un arreglo a esta placa, al parecer este modelo trabaja con un voltaje no adecuado para el esp32. La solucion es desconectar los resistores de 1.8V (a la fuerza) y conectar al regulador de 3.3V.<br>
+Esto es un poco complicado de hacer, se necesita un poco de experiencia, pulso y buen ojo. Gracias a Nico Mahnic que lo hizo por mi, de no tener un Nico, se le agregará dificultad al proyecto.</p>
+</p>
+<img id="arreglo" src="arreglo.jpg">
+
+<h2 id="subtit" style="top: 61rem;left: 2rem;">3)Seguir el esquema:</h2>
+
+<p id="texto" style="top:64rem; left: 2rem;">Ahora toca ver y seguir el esquema, hay que hacer que los cables se conecten entre si a traves del breadboard.<br>
+Una duda que me surgió es la de como funciona el breadboard, ya sabiendo eso paso a explicarlo:
+Hay dos partes, una que tiene 63 lineas con 5 puntos de conexion en comun (donde hacemos las uniones de un mismo cable) y la otra parte posee cuatro lineas a los extremos, de a 25 puntos de conexion para la alimentacion de voltaje y tierra del circuito.
+</p>
+
+<img id="esquema" src="esquema.jpg">
+<img id="proto" src="proto.jpg">
+
+<p id="texto" style="left: 2rem;top: 88rem;">
+Un problema con el que me encontré fue que al parecer los pines del esquema no comparten la misma ubicacion que la del mio, asi que la solucion es conectar los cables al mismo nombre del pin o similar del que figura en nuestra placa.</p>
+</p>
+
+<h2 id="subtit" style="top: 93rem;left: 2rem;">4)Librerias y código:</h2>
+
+<p id="texto" style="left: 2rem;top: 96rem;">Hora de instalar las librerias correspondientes, las cuales van a ser: MAX30100lib, Adafruit_SSD1306.h y Adafruit_GFX.h.<br>
+Solo nos queda compilar el codigo y subirlo al esp32.</p>
+<div id="cuadrado">
+</div>
+<pre id="codigo">
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include "MAX30100_PulseOximeter.h"
+#define REPORTING_PERIOD_MS    100
+PulseOximeter max_sensor;
+uint32_t lastReportTime = 0;
+Adafruit_SSD1306 OLED = Adafruit_SSD1306(128, 32, &Wire);
+        
+void onBeatDetected()
+{
+    Serial.println("Beat!");
+}
+        
+        
+        
+void setup() {
+    // put your setup code here, to run once:
+    OLED.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+    Serial.begin(115200);
+    OLED.display();
+    OLED.clearDisplay();
+    OLED.setTextSize(2);
+    OLED.setTextColor(SSD1306_WHITE);
+    OLED.setCursor(0,0);
+    OLED.display();
+    delay(1000);
+        
+        
+        Serial.print("Initializing pulse oximeter..");
+        
+        // Initialize the PulseOximeter instance
+        // Failures are generally due to an improper I2C wiring, missing power supply
+        // or wrong target chip
+        if (!max_sensor.begin()) {
+            Serial.println("FAILED");
+            for(;;);
+        } else {
+            Serial.println("SUCCESS");
+        }
+            max_sensor.setOnBeatDetectedCallback(onBeatDetected);
+}
+        
+void loop() {
+    // put your main code here, to run repeatedly:
+        
+max_sensor.update();
+        
+        
+    if (millis() - lastReportTime > REPORTING_PERIOD_MS) {
+        
+        OLED.clearDisplay();
+        OLED.setCursor(0,0);
+        OLED.print("H:");
+        OLED.print(max_sensor.getHeartRate());
+        OLED.println("bpm");
+        OLED.print("SpO2:");
+        OLED.print(max_sensor.getSpO2());
+        OLED.println("%");
+        lastReportTime = millis();
+    }
+    OLED.display();
+}
+</pre>
+
+
+<h2 id="subtit" style="top: 168rem;left: 2rem;">Resultado:</h2>
+
+<p id="texto" style="left: 2rem;top: 171rem;"> Como resultado obtenemos un oxímetro completamente funcional y muy útil, lo que si no muy preciso pero cumple decentemente su función.</p>
+
+<img id="oximetro" src="oximetro.jpeg">
+
+<video controls pause id="video">
+    <source src="oximetro.mp4" type="video/mp4">
+</video>
+
+</body>
+</html>
